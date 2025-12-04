@@ -68,80 +68,48 @@ Explanation:
   {
     id: 2,
     title: "Character Cascade from String Array",
-    description: `Given an integer array of length n, return a result array of length n-2, where result[i] = 1 if the triplet (array[i], array[i+1], array[i+2]) satisfies any of the three Pythagorean conditions:
-
-1. array[i]^2 + array[i+1]^2 = array[i+2]^2
-2. array[i+1]^2 + array[i+2]^2 = array[i]^2
-3. array[i]^2 + array[i+2]^2 = array[i+1]^2
-
-Otherwise, result[i] = 0.
+    description: `You are given an array of strings arr. Your task is to construct a string from the words in arr, starting with the 0th character from each word (in the order they appear in arr), followed by the 1st character, then the 2nd character, etc. If one of the words doesn't have an ith character, skip that word. Return the resulting string.
 
 Input Format:
-First line: Number of elements N
-Next line: N space-separated integers
+First line: Number of strings N
+Next line: N space-separated strings
 
 Output Format:
-Return n-2 space-separated integers (or one per line) representing the result array.
+Return the resulting cascaded string.
 
-Example 1:
-Input:
-5
-3 4 5 12 13
-
-Output:
-1 0
-
-Explanation:
-- For triplet (3, 4, 5): 3^2 + 4^2 = 9 + 16 = 25 = 5^2 ✓ → result[0] = 1
-- For triplet (4, 5, 12): Check all three conditions:
-  * 4^2 + 5^2 = 16 + 25 = 41 ≠ 12^2 = 144
-  * 5^2 + 12^2 = 25 + 144 = 169 ≠ 4^2 = 16
-  * 4^2 + 12^2 = 16 + 144 = 160 ≠ 5^2 = 25
-  None satisfied → result[1] = 0
-
-Example 2:
+Example:
 Input:
 4
-5 12 13 3
+Daisy Rose Hyacinth Poppy
 
 Output:
-1 0
+DRHPaoyoisapsecpyiynth
 
 Explanation:
-- For triplet (5, 12, 13): 5^2 + 12^2 = 25 + 144 = 169 = 13^2 ✓ → result[0] = 1
-- For triplet (12, 13, 3): Check all three conditions:
-  * 12^2 + 13^2 = 144 + 169 = 313 ≠ 3^2 = 9
-  * 13^2 + 3^2 = 169 + 9 = 178 ≠ 12^2 = 144
-  * 12^2 + 3^2 = 144 + 9 = 153 ≠ 13^2 = 169
-  None satisfied → result[1] = 0
-
-Example 3:
-Input:
-4
-4 3 5 6
-
-Output:
-1 0
-
-Explanation:
-- For triplet (4, 3, 5): Check condition 3: 4^2 + 5^2 = 16 + 25 = 41 ≠ 3^2 = 9
-  Actually: 3^2 + 4^2 = 9 + 16 = 25 = 5^2 ✓ → result[0] = 1
-- For triplet (3, 5, 6): None of the conditions are satisfied → result[1] = 0`,
+- Round 0 (0th characters): D, R, H, P → "DRHP"
+- Round 1 (1st characters): a, o, y, o → "aoyo"
+- Round 2 (2nd characters): i, s, a, p → "isap"
+- Round 3 (3rd characters): s, e, c, p → "secp"
+- Round 4 (4th characters): y, (skip Rose), i, y → "yiy"
+- Round 5 (5th characters): (skip Daisy), (skip Rose), n, (skip Poppy) → "n"
+- Round 6 (6th characters): (skip Daisy), (skip Rose), t, (skip Poppy) → "t"
+- Round 7 (7th characters): (skip Daisy), (skip Rose), h, (skip Poppy) → "h"
+Final: "DRHP" + "aoyo" + "isap" + "secp" + "yiy" + "n" + "t" + "h" = "DRHPaoyoisapsecpyiynth"`,
     examples: [
-      { input: "5\n3 4 5 12 13", output: "1 0" },
-      { input: "4\n5 12 13 3", output: "1 0" },
-      { input: "4\n4 3 5 6", output: "1 0" },
+      { input: "4\nDaisy Rose Hyacinth Poppy", output: "DRHPaoyoisapsecpyiynth" },
+      { input: "3\nabc def ghi", output: "adgbehcfi" },
+      { input: "2\nhello world", output: "hweolrllod" },
     ],
     testcases: [
-      { id: 1, input: "5\n3 4 5 12 13", expected: "1 0" },
-      { id: 2, input: "4\n5 12 13 3", expected: "1 0" },
-      { id: 3, input: "4\n4 3 5 6", expected: "1 0" },
-      { id: 4, input: "6\n6 8 10 5 12 13", expected: "1 0 1" },
+      { id: 1, input: "4\nDaisy Rose Hyacinth Poppy", expected: "DRHPaoyoisapsecpyiynth" },
+      { id: 2, input: "3\nabc def ghi", expected: "adgbehcfi" },
+      { id: 3, input: "2\nhello world", expected: "hweolrllod" },
+      { id: 4, input: "3\na bc def", expected: "abdcef" },
     ],
     functionSignature: "def solve():",
     starterCode: {
-      python: `def solve():\n    # Read number of elements N\n    # Read the array of integers\n    # For each position i from 0 to n-3:\n    #   Check if triplet (array[i], array[i+1], array[i+2]) satisfies any Pythagorean condition\n    #   Set result[i] = 1 if yes, 0 otherwise\n    # Return the result array\n    pass`,
-      javascript: `function solve() {\n    // Input is available via global.__input__\n    // Parse array of integers\n    // For each triplet, check all three Pythagorean conditions\n    // Return result array of length n-2\n}`,
+      python: `def solve():\n    # Read number of strings N\n    # Read the array of strings\n    # Find the maximum length among all strings\n    # For each position i from 0 to max_length-1:\n    #   For each string in order:\n    #     If string has character at position i, add it to result\n    # Return the resulting string\n    pass`,
+      javascript: `function solve() {\n    // Input is available via global.__input__\n    // Parse array of strings\n    // Iterate through character positions\n    // Collect characters from each string at current position\n    // Return cascaded string\n}`,
     },
   },
   {
