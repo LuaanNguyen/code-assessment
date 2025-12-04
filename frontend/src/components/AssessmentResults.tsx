@@ -86,7 +86,7 @@ export function AssessmentResults({
                   <div>
                     <div className="font-semibold">{problem.title}</div>
                     <div className="text-sm text-gray-600 dark:text-gray-400">
-                      Q{index + 1} {problem.difficulty && `(${problem.difficulty})`}
+                      Q{index + 1}
                     </div>
                   </div>
                   <div className="flex items-center gap-4">

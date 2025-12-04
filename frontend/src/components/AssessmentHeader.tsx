@@ -43,7 +43,6 @@ export function AssessmentHeader({
               const score = assessment.problemScores[index] || 0;
               const isCurrent = index === currentProblemIndex;
               const hasSubmission = assessment.problemSubmissions[problem.id] !== undefined;
-              const difficultyLabels = ['Easy', 'Easy-Medium', 'Medium', 'Medium-Hard'];
 
               return (
                 <button
@@ -66,7 +65,7 @@ export function AssessmentHeader({
                         }
                       : {}
                   }
-                  title={`Q${index + 1}: ${problem.title} (${difficultyLabels[index] || problem.difficulty || ''})`}
+                  title={`Q${index + 1}: ${problem.title}`}
                 >
                   Q{index + 1}
                   {hasSubmission && (

@@ -28,7 +28,6 @@ export function AssessmentStart({ onStart, theme }: AssessmentStartProps) {
             <h2 className="text-xl font-semibold mb-2">Instructions</h2>
             <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300">
               <li>You will have 70 minutes to complete 4 coding problems</li>
-              <li>Problem difficulties: Q1 (Easy), Q2 (Easy-Medium), Q3 (Medium), Q4 (Medium-Hard)</li>
               <li>There are no breaks - the timer runs continuously</li>
               <li>The timer does not stop even if your connection flickers</li>
               <li>Each problem has multiple testcases that must pass</li>

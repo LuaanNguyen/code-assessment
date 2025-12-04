@@ -4,7 +4,6 @@ export const ASSESSMENT_CONFIG = {
   totalProblems: 4,
   timeLimit: 70 * 60 * 1000, // 70 minutes in milliseconds
   problemIds: [1, 2, 3, 4], // IDs of problems in the assessment
-  difficulties: ['Easy', 'Easy-Medium', 'Medium', 'Medium-Hard'], // Difficulty levels
 };
 
 /**

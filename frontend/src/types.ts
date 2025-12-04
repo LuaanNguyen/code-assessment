@@ -5,7 +5,6 @@ export interface Problem {
   examples: Array<{ input: string; output: string }>;
   testcases: Array<{ id: number; input: string; expected: string }>;
   functionSignature: string;
-  difficulty?: string;
   starterCode?: {
     python?: string;
     javascript?: string;
