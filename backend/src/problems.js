@@ -254,35 +254,42 @@ Output (each line as separate output):
 
 Note: Output each line on a separate line. The border width is width + 4 (2 asterisks on each side + 2 spaces).`,
     examples: [
-      { 
-        input: "16\n3\nhello world\nHow areYou doing\nPlease look and align to center", 
-        output: "******************\n*   hello world  *\n* How areYou doing *\n*  Please look   *\n*   and align    *\n*   to center    *\n******************" 
+      {
+        input:
+          "16\n3\nhello world\nHow areYou doing\nPlease look and align to center",
+        output:
+          "******************\n*   hello world  *\n* How areYou doing *\n*  Please look   *\n*   and align    *\n*   to center    *\n******************",
       },
-      { 
-        input: "10\n2\nshort text\nlonger text here", 
-        output: "************\n*  short  *\n*  text   *\n*  longer *\n*  text   *\n*  here   *\n************" 
+      {
+        input: "10\n2\nshort text\nlonger text here",
+        output:
+          "************\n*  short  *\n*  text   *\n*  longer *\n*  text   *\n*  here   *\n************",
       },
     ],
     testcases: [
-      { 
-        id: 1, 
-        input: "16\n3\nhello world\nHow areYou doing\nPlease look and align to center", 
-        expected: "******************\n*   hello world  *\n* How areYou doing *\n*  Please look   *\n*   and align    *\n*   to center    *\n******************" 
+      {
+        id: 1,
+        input:
+          "16\n3\nhello world\nHow areYou doing\nPlease look and align to center",
+        expected:
+          "******************\n*   hello world  *\n* How areYou doing *\n*  Please look   *\n*   and align    *\n*   to center    *\n******************",
       },
-      { 
-        id: 2, 
-        input: "10\n2\nshort text\nlonger text here", 
-        expected: "************\n*  short  *\n*  text   *\n*  longer *\n*  text   *\n*  here   *\n************" 
+      {
+        id: 2,
+        input: "10\n2\nshort text\nlonger text here",
+        expected:
+          "************\n*  short  *\n*  text   *\n*  longer *\n*  text   *\n*  here   *\n************",
       },
-      { 
-        id: 3, 
-        input: "5\n1\na b c", 
-        expected: "*******\n* a b *\n*  c  *\n*******" 
+      {
+        id: 3,
+        input: "5\n1\na b c",
+        expected: "*******\n* a b *\n*  c  *\n*******",
       },
-      { 
-        id: 4, 
-        input: "20\n1\nThis is a single very long word that exceeds", 
-        expected: "************************\n* This is a single very *\n*      long word       *\n*      that exceeds    *\n************************" 
+      {
+        id: 4,
+        input: "20\n1\nThis is a single very long word that exceeds",
+        expected:
+          "************************\n* This is a single very *\n*      long word       *\n*      that exceeds    *\n************************",
       },
     ],
     functionSignature: "def solve():",
@@ -339,35 +346,35 @@ Explanation:
 Possible combinations include: roast, smart, snast, etc.
 Only words present in the dictionary are returned.`,
     examples: [
-      { 
-        input: "76278\nroast smart snast tree test", 
-        output: "roast\nsmart\nsnast" 
+      {
+        input: "76278\nroast smart snast tree test",
+        output: "roast\nsmart\nsnast",
       },
-      { 
-        input: "23\nad ae af bd be bf cd ce cf", 
-        output: "ad\nae\naf\nbd\nbe\nbf\ncd\nce\ncf" 
+      {
+        input: "23\nad ae af bd be bf cd ce cf",
+        output: "ad\nae\naf\nbd\nbe\nbf\ncd\nce\ncf",
       },
     ],
     testcases: [
-      { 
-        id: 1, 
-        input: "76278\nroast smart snast tree test", 
-        expected: "roast\nsmart\nsnast" 
+      {
+        id: 1,
+        input: "76278\nroast smart snast tree test",
+        expected: "roast\nsmart\nsnast",
       },
-      { 
-        id: 2, 
-        input: "23\nad ae af bd be bf cd ce cf", 
-        expected: "ad\nae\naf\nbd\nbe\nbf\ncd\nce\ncf" 
+      {
+        id: 2,
+        input: "23\nad ae af bd be bf cd ce cf",
+        expected: "ad\nae\naf\nbd\nbe\nbf\ncd\nce\ncf",
       },
-      { 
-        id: 3, 
-        input: "2\na b c", 
-        expected: "a\nb\nc" 
+      {
+        id: 3,
+        input: "2\na b c",
+        expected: "a\nb\nc",
       },
-      { 
-        id: 4, 
-        input: "999\nwww wwx wwy wwz", 
-        expected: "www\nwwx\nwwy\nwwz" 
+      {
+        id: 4,
+        input: "999\nwww wwx wwy wwz",
+        expected: "www\nwwx\nwwy\nwwz",
       },
     ],
     functionSignature: "def solve():",
@@ -418,14 +425,16 @@ Explanation:
 - Column 2 is a valid position that results in at least one fully occupied row`,
     examples: [
       {
-        input: "5 5\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n1 1 0 1 0\n1 0 1 0 1\n1 1 1\n1 0 1\n1 0 1",
+        input:
+          "5 5\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n1 1 0 1 0\n1 0 1 0 1\n1 1 1\n1 0 1\n1 0 1",
         output: "2",
       },
     ],
     testcases: [
       {
         id: 1,
-        input: "5 5\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n1 1 0 1 0\n1 0 1 0 1\n1 1 1\n1 0 1\n1 0 1",
+        input:
+          "5 5\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n1 1 0 1 0\n1 0 1 0 1\n1 1 1\n1 0 1\n1 0 1",
         expected: "2",
       },
       {
@@ -439,12 +448,13 @@ Explanation:
       python: `def solve():\n    # Read field dimensions n, m\n    # Read n lines for the field matrix\n    # Read 3 lines for the figure matrix\n    # For each possible dropping column position:\n    #   Simulate dropping the figure from top\n    #   Check if it creates at least one fully occupied row\n    # Return the first valid column position, or -1\n    pass`,
       javascript: `function solve() {\n    // Input is available via global.__input__\n    // Parse field and figure matrices\n    // Try each possible dropping position\n    // Simulate the drop and check for full rows\n    // Return valid position or -1\n}`,
     },
+  },
   // Q1 Problems - String manipulation, basic math, simple hashmap, counting frequency
   {
     id: 7,
     title: "Character Frequency Counter",
     description: `Given a string, count the frequency of each character and return the character that appears most frequently. If there's a tie, return the lexicographically smallest character.
-
+    
 Input Format:
 A single line containing a string.
 
@@ -1051,9 +1061,7 @@ Output:
 
 Explanation:
 Groups: ["eat","tea","ate"], ["tan","nat"], ["bat"]`,
-    examples: [
-      { input: "6\neat\ntea\ntan\nate\nnat\nbat", output: "3" },
-    ],
+    examples: [{ input: "6\neat\ntea\ntan\nate\nnat\nbat", output: "3" }],
     testcases: [
       { id: 1, input: "6\neat\ntea\ntan\nate\nnat\nbat", expected: "3" },
       { id: 2, input: "1\na", expected: "1" },
@@ -1304,7 +1312,11 @@ Intervals [1,3] and [2,6] overlap, merge into [1,6].`,
       { input: "2\n1 4\n4 5", output: "1 5" },
     ],
     testcases: [
-      { id: 1, input: "4\n1 3\n2 6\n8 10\n15 18", expected: "1 6\n8 10\n15 18" },
+      {
+        id: 1,
+        input: "4\n1 3\n2 6\n8 10\n15 18",
+        expected: "1 6\n8 10\n15 18",
+      },
       { id: 2, input: "2\n1 4\n4 5", expected: "1 5" },
       { id: 3, input: "1\n1 4", expected: "1 4" },
     ],
@@ -1485,10 +1497,19 @@ YES
 Explanation:
 This is a valid solvable Sudoku puzzle.`,
     examples: [
-      { input: "5 3 0 0 7 0 0 0 0\n6 0 0 1 9 5 0 0 0\n0 9 8 0 0 0 0 6 0\n8 0 0 0 6 0 0 0 3\n4 0 0 8 0 3 0 0 1\n7 0 0 0 2 0 0 0 6\n0 6 0 0 0 0 2 8 0\n0 0 0 4 1 9 0 0 5\n0 0 0 0 8 0 0 7 9", output: "YES" },
+      {
+        input:
+          "5 3 0 0 7 0 0 0 0\n6 0 0 1 9 5 0 0 0\n0 9 8 0 0 0 0 6 0\n8 0 0 0 6 0 0 0 3\n4 0 0 8 0 3 0 0 1\n7 0 0 0 2 0 0 0 6\n0 6 0 0 0 0 2 8 0\n0 0 0 4 1 9 0 0 5\n0 0 0 0 8 0 0 7 9",
+        output: "YES",
+      },
     ],
     testcases: [
-      { id: 1, input: "5 3 0 0 7 0 0 0 0\n6 0 0 1 9 5 0 0 0\n0 9 8 0 0 0 0 6 0\n8 0 0 0 6 0 0 0 3\n4 0 0 8 0 3 0 0 1\n7 0 0 0 2 0 0 0 6\n0 6 0 0 0 0 2 8 0\n0 0 0 4 1 9 0 0 5\n0 0 0 0 8 0 0 7 9", expected: "YES" },
+      {
+        id: 1,
+        input:
+          "5 3 0 0 7 0 0 0 0\n6 0 0 1 9 5 0 0 0\n0 9 8 0 0 0 0 6 0\n8 0 0 0 6 0 0 0 3\n4 0 0 8 0 3 0 0 1\n7 0 0 0 2 0 0 0 6\n0 6 0 0 0 0 2 8 0\n0 0 0 4 1 9 0 0 5\n0 0 0 0 8 0 0 7 9",
+        expected: "YES",
+      },
     ],
     functionSignature: "def solve():",
     starterCode: {
@@ -1526,7 +1547,11 @@ There is one connected island.`,
       { input: "3 3\n1 1 0\n0 1 0\n0 0 1", output: "2" },
     ],
     testcases: [
-      { id: 1, input: "4 5\n1 1 1 1 0\n1 1 0 1 0\n1 1 0 0 0\n0 0 0 0 0", expected: "1" },
+      {
+        id: 1,
+        input: "4 5\n1 1 1 1 0\n1 1 0 1 0\n1 1 0 0 0\n0 0 0 0 0",
+        expected: "1",
+      },
       { id: 2, input: "3 3\n1 1 0\n0 1 0\n0 0 1", expected: "2" },
       { id: 3, input: "2 2\n1 0\n0 1", expected: "2" },
     ],

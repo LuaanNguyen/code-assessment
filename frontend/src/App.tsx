@@ -9,6 +9,7 @@ import { AssessmentResults } from './components/AssessmentResults';
 import { useTheme, type Theme } from './hooks/useTheme';
 import { useProblems } from './hooks/useProblems';
 import { useAssessment, type AssessmentVersion } from './hooks/useAssessment';
+import { useResizablePanels } from './hooks/useResizablePanels';
 import type { Problem, ExecutionResult } from './types';
 
 type Mode = 'practice' | 'assessment';
@@ -26,6 +27,21 @@ function App() {
     completeAssessment,
     resetAssessment,
   } = useAssessment();
+  
+  const {
+    leftWidth,
+    centerWidth,
+    rightWidth,
+    containerRef,
+    handleMouseDown,
+  } = useResizablePanels({
+    leftMinWidth: 200,
+    centerMinWidth: 300,
+    rightMinWidth: 200,
+    initialLeftWidth: 25,
+    initialCenterWidth: 50,
+    initialRightWidth: 25,
+  });
 
   const [mode, setMode] = useState<Mode>('practice');
   const [code, setCode] = useState<string>('');
@@ -346,14 +362,31 @@ function App() {
         )}
       </div>
 
-      <div className="flex h-[calc(100vh-112px)]">
+      <div 
+        ref={containerRef}
+        className="flex h-[calc(100vh-112px)] relative"
+      >
         {/* Left Panel - Problem Description */}
-        <div className="w-1/4 border-r border-gray-300 dark:border-gray-700 overflow-y-auto">
+        <div 
+          className="border-r border-gray-300 dark:border-gray-700 overflow-y-auto"
+          style={{ width: `${leftWidth}%` }}
+        >
           <ProblemPanel problem={displayProblem} />
         </div>
 
+        {/* Left Resizer */}
+        <div
+          className="w-1 bg-gray-300 dark:bg-gray-700 hover:bg-blue-500 dark:hover:bg-blue-600 cursor-col-resize transition-colors relative z-10"
+          onMouseDown={(e) => handleMouseDown('left', e)}
+        >
+          <div className="absolute inset-y-0 -left-1 -right-1" />
+        </div>
+
         {/* Center Panel - Code Editor */}
-        <div className="w-2/4 border-r border-gray-300 dark:border-gray-700 flex flex-col">
+        <div 
+          className="border-r border-gray-300 dark:border-gray-700 flex flex-col"
+          style={{ width: `${centerWidth}%` }}
+        >
           <CodeEditor
             code={code}
             language={language}
@@ -366,8 +399,19 @@ function App() {
           />
         </div>
 
+        {/* Right Resizer */}
+        <div
+          className="w-1 bg-gray-300 dark:bg-gray-700 hover:bg-blue-500 dark:hover:bg-blue-600 cursor-col-resize transition-colors relative z-10"
+          onMouseDown={(e) => handleMouseDown('right', e)}
+        >
+          <div className="absolute inset-y-0 -left-1 -right-1" />
+        </div>
+
         {/* Right Panel - Testcases & Output */}
-        <div className="w-1/4 overflow-y-auto">
+        <div 
+          className="overflow-y-auto"
+          style={{ width: `${rightWidth}%` }}
+        >
           <TestcasePanel
             problem={displayProblem}
             customInput={customInput}
