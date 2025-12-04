@@ -1,0 +1,21 @@
+{
+  "name": "code-assessment-platform",
+  "version": "1.0.0",
+  "description": "A complete web-based coding assessment platform",
+  "scripts": {
+    "install:all": "cd backend && npm install && cd ../frontend && npm install",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "start:backend": "cd backend && npm start",
+    "start:frontend": "cd frontend && npm run build && npm run preview"
+  },
+  "keywords": [
+    "code-assessment",
+    "coding-platform",
+    "code-execution"
+  ],
+  "author": "",
+  "license": "ISC"
+}
+
+
