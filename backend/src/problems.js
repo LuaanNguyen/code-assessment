@@ -3,28 +3,66 @@
 const problems = [
   {
     id: 1,
-    title: "Sum of Two Numbers",
-    description: `Given two integers a and b, return their sum.
+    title: "Robot Movement",
+    description: `A robot moves on a horizontal line. It understands two commands:
+- 'L': Move one step to the left
+- 'R': Move one step to the right
 
-Write a function solve() that takes no parameters. The function should read two space-separated integers from standard input and return their sum.
+The robot starts at position 0. Given a string of commands, determine the robot's final position relative to its starting position.
 
-Example:
-Input: "1 2"
-Output: "3"`,
+Task:
+Return a string based on the final position:
+- If the robot stops to the left of its starting position (final position < 0), return "L"
+- If the robot stops at its starting position (final position == 0), return "" (empty string)
+- If the robot stops to the right of its starting position (final position > 0), return "R"
+
+Input Format:
+A single line containing a string of 'L' and 'R' characters.
+
+Example 1:
+Input: "RLLRLL"
+Output: "L"
+
+Explanation:
+- Start at position 0
+- R: position 1
+- L: position 0
+- L: position -1
+- R: position 0
+- L: position -1
+- L: position -2
+Final position is -2 (left of start), so return "L"
+
+Example 2:
+Input: "LLRLLLRRRR"
+Output: ""
+
+Explanation:
+- After executing all commands, the robot returns to position 0
+- Final position is 0 (at start), so return "" (empty string)
+
+Example 3:
+Input: "RRR"
+Output: "R"
+
+Explanation:
+- Final position is 3 (right of start), so return "R"`,
     examples: [
-      { input: "1 2", output: "3" },
-      { input: "5 7", output: "12" },
+      { input: "RLLRLL", output: "L" },
+      { input: "LLRLLLRRRR", output: "" },
+      { input: "RRR", output: "R" },
     ],
     testcases: [
-      { id: 1, input: "3 4", expected: "7" },
-      { id: 2, input: "10 12", expected: "22" },
-      { id: 3, input: "-5 8", expected: "3" },
-      { id: 4, input: "0 0", expected: "0" },
+      { id: 1, input: "RLLRLL", expected: "L" },
+      { id: 2, input: "LLRLLLRRRR", expected: "" },
+      { id: 3, input: "RRR", expected: "R" },
+      { id: 4, input: "LLL", expected: "L" },
+      { id: 5, input: "RLRLRL", expected: "" },
     ],
     functionSignature: "def solve():",
     starterCode: {
-      python: `def solve():\n    # Read two integers from input\n    # Return their sum\n    pass`,
-      javascript: `function solve() {\n    // Input is available via global.__input__\n    const input = global.__input__ || '';\n    const values = input.split(' ').map(Number);\n    const a = values[0];\n    const b = values[1];\n    // Return their sum\n    return a + b;\n}`,
+      python: `def solve():\n    # Read command string from input\n    # Track position (start at 0)\n    # Process each command: L decreases, R increases\n    # Return "L", "", or "R" based on final position\n    pass`,
+      javascript: `function solve() {\n    // Input is available via global.__input__\n    // Process commands and track position\n    // Return "L", "", or "R" based on final position\n}`,
     },
   },
   {
