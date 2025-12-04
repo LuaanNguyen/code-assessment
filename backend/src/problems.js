@@ -67,7 +67,7 @@ Explanation:
   },
   {
     id: 2,
-    title: "Array Triplets with Pythagorean Property",
+    title: "Character Cascade from String Array",
     description: `Given an integer array of length n, return a result array of length n-2, where result[i] = 1 if the triplet (array[i], array[i+1], array[i+2]) satisfies any of the three Pythagorean conditions:
 
 1. array[i]^2 + array[i+1]^2 = array[i+2]^2
@@ -146,95 +146,92 @@ Explanation:
   },
   {
     id: 3,
-    title: "Memory Allocation",
-    description: `Given an array of 0s and 1s, interpret every 8 bits as one block. A contiguous subarray of 0's that starts at the beginning of each block is considered "free memory".
+    title: "Card Hand Validation",
+    description: `You are provided with a set of cards characterized by suits (+, -, =), values (A, B, C), and counts of these values ranging from 1 to 3. Your goal is to identify a valid hand from the given cards.
 
-For example, given [0011111111111100], the free memory in each block is calculated as follows:
-- Block 1: [00111111] (Free memory size: 2)
-- Block 2: [11111100] (Free memory: 0)
+A valid hand consists of 3 cards where:
+1. All the suits are either the same or all different
+2. All the values are either the same or all different
+3. All the counts are either the same or all different
+
+Card Format:
+Each card is represented as: [suit][value repeated count times]
+- Suits: +, -, =
+- Values: A, B, C
+- Count: 1, 2, or 3 (number of times the value appears)
+
+Examples of valid hands:
+- { +AA, +AA, +AA }: Same suit, same value, same count
+- { -A, -AA, -AAA }: Same suit, same value, different counts (1, 2, 3)
+- { -C, -B, -A }: Same suit, different values, same count
+- { +AA, -AA, =AA }: Different suits, same value, same count
+- { -A, +BB, =CCC }: Different suits, different values, different counts
 
 Input Format:
-First line: A string of 0s and 1s representing the memory array
-Second line: Number of queries N
-Next N lines: Each query in format "i j" where:
-  - i = 0: Allocate Memory (i, size)
-  - i = 1: Release Memory (i, k)
+A single line containing comma-separated cards (e.g., "+AA, -AA, +AA, -C, -B, +AA, -AAA, -A, =AA")
 
-Query Types:
-1. Allocate Memory (i = 0): For a query like (0, 5), find the earliest block where 5 consecutive 0's are available at the start of the block. Return the starting index of this block. If no suitable block is found, return -1. When memory is successfully allocated, mark those bits as 1.
+Output Format:
+Output any valid hand of 3 cards from the set, formatted as the three cards separated by spaces or commas.
 
-2. Release Memory (i = 1): For a query like (1, 3), release the memory of the 3rd successful allocation. Return the size of the memory being released. Mark these bits as 0.
+Example 1:
+Input:
++AA, -AA, +AA, -C, -B, +AA, -AAA, -A, =AA
 
 Output:
-A list where each element corresponds to one query. Output each result on a separate line.
-
-Example:
-Input:
-"0011111111111100"
-2
-"0 5"
-"1 1"
++AA +AA +AA
 
 Explanation:
-- Initial blocks: Block 0 [00111111] has 2 free, Block 1 [11111100] has 0 free
-- Query (0,5): Need 5 consecutive 0s at start. Block 0 only has 2, Block 1 has 0. Return -1.
-- Query (1,1): Release 1st allocation, but there was no successful allocation, so this wouldn't happen in valid input.
+Suit: Same [+ + +]
+Value: Same [A A A]
+Count: Same [2 2 2]
 
-For a valid example:
+Example 2:
 Input:
-"0000000011111111"
-3
-"0 3"
-"0 2"
-"1 1"
+-A, -AA, -AAA, +BB, =CCC
 
 Output:
-0
-8
-3
+-A -AA -AAA
 
 Explanation:
-- Block 0: [00000000] has 8 free 0s at start
-- Block 1: [11111111] has 0 free
-- Query (0,3): Find block with 3+ 0s at start -> Block 0, return 0, mark first 3 bits as 1: [11100000]
-- Query (0,2): Find block with 2+ 0s at start -> Block 0 still has 5 free, return 0, mark next 2: [11111000]
-- Query (1,1): Release 1st allocation (size 3), return 3, mark those bits back to 0: [00011000]`,
+Suit: Same [- - -]
+Value: Same [A A A]
+Count: Different [1 2 3]`,
     examples: [
       {
-        input: "0000000011111111\n3\n0 3\n0 2\n1 1",
-        output: "0\n8\n3",
+        input: "+AA, -AA, +AA, -C, -B, +AA, -AAA, -A, =AA",
+        output: "+AA +AA +AA",
       },
       {
-        input: "0000111100001111\n2\n0 4\n0 2",
-        output: "0\n-1",
+        input: "-A, -AA, -AAA, +BB, =CCC",
+        output: "-A -AA -AAA",
       },
     ],
     testcases: [
       {
         id: 1,
-        input: "0000000011111111\n3\n0 3\n0 2\n1 1",
-        expected: "0\n8\n3",
+        input: "+AA, -AA, +AA, -C, -B, +AA, -AAA, -A, =AA",
+        expected: "+AA +AA +AA",
       },
       {
         id: 2,
-        input: "0000111100001111\n2\n0 4\n0 2",
-        expected: "0\n-1",
+        input: "-A, -AA, -AAA, +BB, =CCC",
+        expected: "-A -AA -AAA",
       },
       {
         id: 3,
-        input: "0000000000000000\n2\n0 5\n0 3",
-        expected: "0\n0",
+        input: "-C, -B, -A, +AA, =BB",
+        expected: "-C -B -A",
       },
       {
         id: 4,
-        input: "1111111111111111\n1\n0 1",
-        expected: "-1",
+        input: "+AA, -AA, =AA, +BB, -BB",
+        expected: "+AA -AA =AA",
       },
     ],
     functionSignature: "def solve():",
     starterCode: {
-      python: `def solve():\n    # Read memory array string\n    # Read number of queries\n    # Process each query and output result\n    pass`,
-      javascript: `function solve() {\n    // Input is available via global.__input__\n    // Process memory allocation queries\n    // Return results for each query\n}`,
+      python: `def solve():\n    # Read comma-separated cards from input\n    # Parse each card to extract suit, value, and count\n    # Try all combinations of 3 cards\n    # Check if a combination satisfies all three conditions:\n    #   1. Suits: all same OR all different\n    #   2. Values: all same OR all different\n    #   3. Counts: all same OR all different\n    # Return the first valid hand found\n    pass`,
+      javascript: `function solve() {\n    // Input is available via global.__input__\n    // Parse comma-separated cards\n    // Extract suit, value, and count for each card\n    // Check all combinations of 3 cards for valid hand\n    // Return first valid hand\n}`,
     },
   },
   {
