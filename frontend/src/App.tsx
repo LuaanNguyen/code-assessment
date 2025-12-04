@@ -8,7 +8,7 @@ import { AssessmentStart } from './components/AssessmentStart';
 import { AssessmentResults } from './components/AssessmentResults';
 import { useTheme, type Theme } from './hooks/useTheme';
 import { useProblems } from './hooks/useProblems';
-import { useAssessment } from './hooks/useAssessment';
+import { useAssessment, type AssessmentVersion } from './hooks/useAssessment';
 import type { Problem, ExecutionResult } from './types';
 
 type Mode = 'practice' | 'assessment';
@@ -18,6 +18,7 @@ function App() {
   const { problems, currentProblem, setCurrentProblem } = useProblems();
   const {
     assessment,
+    assessmentVersion,
     isActive: isAssessmentActive,
     startAssessment,
     submitProblem,
@@ -36,8 +37,8 @@ function App() {
   const [executionResult, setExecutionResult] = useState<ExecutionResult | null>(null);
   const [submissionResults, setSubmissionResults] = useState<any>(null);
 
-  // Assessment problems (first 4 problems)
-  const assessmentProblems = problems.slice(0, 4);
+  // Assessment problems from selected version
+  const assessmentProblems = assessmentVersion?.problems || [];
   const currentAssessmentProblem =
     assessment && assessmentProblems[assessment.currentProblemIndex];
 
@@ -186,11 +187,13 @@ function App() {
     }
   };
 
-  const handleStartAssessment = () => {
-    startAssessment();
+  const handleStartAssessment = (version: AssessmentVersion) => {
+    startAssessment(version);
     setMode('assessment');
-    if (assessmentProblems.length > 0) {
-      setCurrentProblem(assessmentProblems[0]);
+    if (version.problems.length > 0) {
+      // Set the first problem from the version
+      const firstProblem = version.problems[0];
+      setCurrentProblem(firstProblem);
     }
   };
 

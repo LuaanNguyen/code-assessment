@@ -116,7 +116,7 @@ Total: 3 valid words`,
   },
   {
     id: 3,
-    title: "Card Hand Validation",
+    title: "Game Field Matrix Puzzle",
     description: `You are provided with a set of cards characterized by suits (+, -, =), values (A, B, C), and counts of these values ranging from 1 to 3. Your goal is to identify a valid hand from the given cards.
 
 A valid hand consists of 3 cards where:
@@ -374,6 +374,70 @@ Only words present in the dictionary are returned.`,
     starterCode: {
       python: `def solve():\n    # Read phone number digits\n    # Read dictionary words\n    # Map digits to letters\n    # Generate all possible letter combinations\n    # Filter by dictionary and return in sorted order\n    pass`,
       javascript: `function solve() {\n    // Input is available via global.__input__\n    // Parse phone number and dictionary\n    // Map digits to letters\n    // Generate combinations and filter by dictionary\n    // Return sorted valid words\n}`,
+    },
+  },
+  {
+    id: 6,
+    title: "Game Field Matrix Puzzle",
+    description: `You are given a matrix of integers field of size n × m representing a game field, and a matrix of integers figure of size 3 × 3 representing a figure. Both matrices contain only 0s (free cell) and 1s (occupied cell).
+
+Your task is to drop the figure onto the field from a position at the top such that it descends straight down until it reaches the bottom of the field or lands on a cell that is occupied. Your goal is to find a dropping position that results in at least one fully occupied row. The dropping position corresponds to the column index of the cell in the field that aligns with the top-left corner of the figure.
+
+If multiple positions satisfy the condition, any one of them is an acceptable output. If no such positions exist, return -1.
+
+Note: The 3 × 3 figure matrix must be entirely inside the game field during the drop, even if parts of the figure are unoccupied.
+
+Input Format:
+First line: n m (dimensions of field)
+Next n lines: Each line has m space-separated integers (0 or 1) representing a row of the field
+Next 3 lines: Each line has 3 space-separated integers (0 or 1) representing a row of the figure
+
+Output Format:
+Return an integer: the column index (0-indexed) where the top-left corner of the figure should be dropped, or -1 if no valid position exists.
+
+Example:
+Input:
+5 5
+0 0 0 0 0
+0 0 0 0 0
+0 0 0 0 0
+1 1 0 1 0
+1 0 1 0 1
+1 1 1
+1 0 1
+1 0 1
+
+Output:
+2
+
+Explanation:
+- Field is 5×5
+- Figure is 3×3
+- The figure can be dropped at column 2 (0-indexed)
+- When dropped, it will fall and land, potentially creating a full row
+- Column 2 is a valid position that results in at least one fully occupied row`,
+    examples: [
+      {
+        input: "5 5\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n1 1 0 1 0\n1 0 1 0 1\n1 1 1\n1 0 1\n1 0 1",
+        output: "2",
+      },
+    ],
+    testcases: [
+      {
+        id: 1,
+        input: "5 5\n0 0 0 0 0\n0 0 0 0 0\n0 0 0 0 0\n1 1 0 1 0\n1 0 1 0 1\n1 1 1\n1 0 1\n1 0 1",
+        expected: "2",
+      },
+      {
+        id: 2,
+        input: "4 4\n0 0 0 0\n0 0 0 0\n1 1 1 1\n0 0 0 0\n1 1 1\n1 1 1\n1 1 1",
+        expected: "0",
+      },
+    ],
+    functionSignature: "def solve():",
+    starterCode: {
+      python: `def solve():\n    # Read field dimensions n, m\n    # Read n lines for the field matrix\n    # Read 3 lines for the figure matrix\n    # For each possible dropping column position:\n    #   Simulate dropping the figure from top\n    #   Check if it creates at least one fully occupied row\n    # Return the first valid column position, or -1\n    pass`,
+      javascript: `function solve() {\n    // Input is available via global.__input__\n    // Parse field and figure matrices\n    // Try each possible dropping position\n    // Simulate the drop and check for full rows\n    // Return valid position or -1\n}`,
     },
   },
 ];

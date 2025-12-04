@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import { executeCode } from "./executor.js";
 import { getProblems, getProblemById } from "./problems.js";
+import { getAllAssessmentVersions, getAssessmentVersion } from "./assessments.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -32,6 +33,48 @@ app.get("/api/problems/:id", (req, res) => {
       return res.status(404).json({ error: "Problem not found" });
     }
     res.json(problem);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get all assessment versions
+app.get("/api/assessments", (req, res) => {
+  try {
+    const versions = getAllAssessmentVersions();
+    res.json(versions);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get assessment version by ID (with problem details)
+app.get("/api/assessments/:id", (req, res) => {
+  try {
+    const version = getAssessmentVersion(req.params.id);
+    if (!version) {
+      return res.status(404).json({ error: "Assessment version not found" });
+    }
+    
+    // Get problem details for each problem in this version
+    const problems = version.problemIds.map(id => {
+      const problem = getProblemById(id);
+      return problem ? {
+        id: problem.id,
+        title: problem.title,
+        description: problem.description,
+        examples: problem.examples,
+        functionSignature: problem.functionSignature,
+        starterCode: problem.starterCode,
+        testcases: problem.testcases,
+      } : null;
+    }).filter(p => p !== null);
+    
+    res.json({
+      id: version.id,
+      name: version.name,
+      problems,
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

@@ -36,6 +36,7 @@ export interface AssessmentState {
   problemScores: number[];
   problemSubmissions: Record<number, ExecutionResult | null>;
   completed: boolean;
+  versionId?: number;
 }
 
 export interface AssessmentResult {

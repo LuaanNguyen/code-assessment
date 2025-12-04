@@ -4,9 +4,29 @@ import type { AssessmentState, ExecutionResult } from '../types';
 const ASSESSMENT_STORAGE_KEY = 'assessment_state';
 const TIME_LIMIT = 70 * 60 * 1000; // 70 minutes
 
+export interface AssessmentVersion {
+  id: number;
+  name: string;
+  problems: Array<{
+    id: number;
+    title: string;
+    description: string;
+    examples: Array<{ input: string; output: string }>;
+    functionSignature: string;
+    starterCode?: {
+      python?: string;
+      javascript?: string;
+    };
+    testcases: Array<{ id: number; input: string; expected: string }>;
+  }>;
+}
+
+export type { AssessmentVersion };
+
 export function useAssessment() {
   const [assessment, setAssessment] = useState<AssessmentState | null>(null);
   const [isActive, setIsActive] = useState(false);
+  const [assessmentVersion, setAssessmentVersion] = useState<AssessmentVersion | null>(null);
 
   // Load assessment from localStorage
   useEffect(() => {
@@ -18,12 +38,22 @@ export function useAssessment() {
         const elapsed = now - parsed.startTime;
         const timeRemaining = Math.max(0, TIME_LIMIT - elapsed);
 
-        if (timeRemaining > 0 && !parsed.completed) {
-          setAssessment({
-            ...parsed,
-            timeRemaining,
-          });
-          setIsActive(true);
+        if (timeRemaining > 0 && !parsed.completed && parsed.versionId) {
+          // Load the assessment version
+          fetch(`/api/assessments/${parsed.versionId}`)
+            .then(res => res.json())
+            .then(version => {
+              setAssessmentVersion(version);
+              setAssessment({
+                ...parsed,
+                timeRemaining,
+              });
+              setIsActive(true);
+            })
+            .catch(e => {
+              console.error('Failed to load assessment version:', e);
+              localStorage.removeItem(ASSESSMENT_STORAGE_KEY);
+            });
         } else {
           // Assessment expired or completed
           localStorage.removeItem(ASSESSMENT_STORAGE_KEY);
@@ -71,27 +101,32 @@ export function useAssessment() {
     }
   }, [assessment]);
 
-  const startAssessment = useCallback(() => {
+  const startAssessment = useCallback((version: AssessmentVersion) => {
     const newAssessment: AssessmentState = {
       id: `assessment-${Date.now()}`,
       startTime: Date.now(),
       endTime: Date.now() + TIME_LIMIT,
       timeRemaining: TIME_LIMIT,
       currentProblemIndex: 0,
-      problemScores: [0, 0, 0, 0],
+      problemScores: new Array(version.problems.length).fill(0),
       problemSubmissions: {},
       completed: false,
+      versionId: version.id,
     };
 
     setAssessment(newAssessment);
+    setAssessmentVersion(version);
     setIsActive(true);
   }, []);
 
   const submitProblem = useCallback((problemId: number, result: ExecutionResult) => {
     setAssessment((prev) => {
-      if (!prev) return null;
+      if (!prev || !assessmentVersion) return null;
 
-      const problemIndex = problemId - 1; // Problem IDs are 1-indexed
+      // Find the index of the problem in the assessment version
+      const problemIndex = assessmentVersion.problems.findIndex(p => p.id === problemId);
+      if (problemIndex === -1) return prev;
+
       const passed = result.testResults?.every((t) => t.passed) || false;
       const score = passed ? 100 : calculateScore(result.testResults || []);
 
@@ -107,7 +142,7 @@ export function useAssessment() {
         problemScores: newScores,
       };
     });
-  }, []);
+  }, [assessmentVersion]);
 
   const setCurrentProblemIndex = useCallback((index: number) => {
     setAssessment((prev) => {
@@ -134,11 +169,13 @@ export function useAssessment() {
   const resetAssessment = useCallback(() => {
     localStorage.removeItem(ASSESSMENT_STORAGE_KEY);
     setAssessment(null);
+    setAssessmentVersion(null);
     setIsActive(false);
   }, []);
 
   return {
     assessment,
+    assessmentVersion,
     isActive,
     startAssessment,
     submitProblem,
