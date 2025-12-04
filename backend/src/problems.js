@@ -109,35 +109,35 @@ Explanation:
 - Query (0,2): Find block with 2+ 0s at start -> Block 0 still has 5 free, return 0, mark next 2: [11111000]
 - Query (1,1): Release 1st allocation (size 3), return 3, mark those bits back to 0: [00011000]`,
     examples: [
-      { 
-        input: "0000000011111111\n3\n0 3\n0 2\n1 1", 
-        output: "0\n8\n3" 
+      {
+        input: "0000000011111111\n3\n0 3\n0 2\n1 1",
+        output: "0\n8\n3",
       },
-      { 
-        input: "0000111100001111\n2\n0 4\n0 2", 
-        output: "0\n-1" 
+      {
+        input: "0000111100001111\n2\n0 4\n0 2",
+        output: "0\n-1",
       },
     ],
     testcases: [
-      { 
-        id: 1, 
-        input: "0000000011111111\n3\n0 3\n0 2\n1 1", 
-        expected: "0\n8\n3" 
+      {
+        id: 1,
+        input: "0000000011111111\n3\n0 3\n0 2\n1 1",
+        expected: "0\n8\n3",
       },
-      { 
-        id: 2, 
-        input: "0000111100001111\n2\n0 4\n0 2", 
-        expected: "0\n-1" 
+      {
+        id: 2,
+        input: "0000111100001111\n2\n0 4\n0 2",
+        expected: "0\n-1",
       },
-      { 
-        id: 3, 
-        input: "0000000000000000\n2\n0 5\n0 3", 
-        expected: "0\n0" 
+      {
+        id: 3,
+        input: "0000000000000000\n2\n0 5\n0 3",
+        expected: "0\n0",
       },
-      { 
-        id: 4, 
-        input: "1111111111111111\n1\n0 1", 
-        expected: "-1" 
+      {
+        id: 4,
+        input: "1111111111111111\n1\n0 1",
+        expected: "-1",
       },
     ],
     functionSignature: "def solve():",
@@ -148,28 +148,89 @@ Explanation:
   },
   {
     id: 4,
-    title: "Reverse String",
-    description: `Given a string, reverse it and return the reversed string.
+    title: "Codewriting",
+    description: `Format text for a newspaper page according to specific rules.
 
-Write a function solve() that reads a string from standard input and returns the reversed string.
+Input Format:
+The input will be provided as follows:
+- First line: width (integer)
+- Second line: number of paragraphs N
+- Next N lines: Each line contains a paragraph represented as space-separated text chunks
+
+For example:
+16
+3
+hello world
+How areYou doing
+Please look and align to center
+
+Output Format:
+Return an array of strings where each string represents a line of the newspaper page.
+
+Rules:
+1. Paragraph Start: Each paragraph starts on a new line
+2. Text Chunks Order: Add text chunks from each paragraph in order
+3. Chunk Separation: When text portions are on the same line, separate them by 1 space
+4. Line Wrapping: If adding the next chunk would cause the line to exceed width, start a new line. You cannot break up individual text chunks.
+5. Centering: If a line has leftover space (total length < width), center the text:
+   - Even leftover space: Add equal spaces before and after
+   - Odd leftover space: Add equal spaces before and after, with extra space after
+6. Border: Add a rectangular border of asterisks (*) around the entire page. The border does not count towards width.
 
 Example:
-Input: "hello"
-Output: "olleh"`,
+Input:
+16
+3
+hello world
+How areYou doing
+Please look and align to center
+
+Output (each line as separate output):
+******************
+*   hello world  *
+* How areYou doing *
+*  Please look   *
+*   and align    *
+*   to center    *
+******************
+
+Note: Output each line on a separate line. The border width is width + 4 (2 asterisks on each side + 2 spaces).`,
     examples: [
-      { input: "hello", output: "olleh" },
-      { input: "world", output: "dlrow" },
+      { 
+        input: "16\n3\nhello world\nHow areYou doing\nPlease look and align to center", 
+        output: "******************\n*   hello world  *\n* How areYou doing *\n*  Please look   *\n*   and align    *\n*   to center    *\n******************" 
+      },
+      { 
+        input: "10\n2\nshort text\nlonger text here", 
+        output: "************\n*  short  *\n*  text   *\n*  longer *\n*  text   *\n*  here   *\n************" 
+      },
     ],
     testcases: [
-      { id: 1, input: "hello", expected: "olleh" },
-      { id: 2, input: "world", expected: "dlrow" },
-      { id: 3, input: "abc", expected: "cba" },
-      { id: 4, input: "12345", expected: "54321" },
+      { 
+        id: 1, 
+        input: "16\n3\nhello world\nHow areYou doing\nPlease look and align to center", 
+        expected: "******************\n*   hello world  *\n* How areYou doing *\n*  Please look   *\n*   and align    *\n*   to center    *\n******************" 
+      },
+      { 
+        id: 2, 
+        input: "10\n2\nshort text\nlonger text here", 
+        expected: "************\n*  short  *\n*  text   *\n*  longer *\n*  text   *\n*  here   *\n************" 
+      },
+      { 
+        id: 3, 
+        input: "5\n1\na b c", 
+        expected: "*******\n* a b *\n*  c  *\n*******" 
+      },
+      { 
+        id: 4, 
+        input: "20\n1\nThis is a single very long word that exceeds", 
+        expected: "************************\n* This is a single very *\n*      long word       *\n*      that exceeds    *\n************************" 
+      },
     ],
     functionSignature: "def solve():",
     starterCode: {
-      python: `def solve():\n    # Read a string from input\n    # Return the reversed string\n    pass`,
-      javascript: `function solve() {\n    // Input is available via global.__input__\n    const input = global.__input__ || '';\n    // Return the reversed string\n    return input.split('').reverse().join('');\n}`,
+      python: `def solve():\n    # Read width\n    # Read number of paragraphs\n    # Read each paragraph (space-separated chunks)\n    # Format according to rules\n    # Add border and return lines\n    pass`,
+      javascript: `function solve() {\n    // Input is available via global.__input__\n    // Parse input: width, paragraphs\n    // Format text with centering and wrapping\n    // Add border and return array of lines\n}`,
     },
   },
 ];

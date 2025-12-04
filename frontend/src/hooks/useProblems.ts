@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import type { Problem } from '../types';
+import { useState, useEffect } from "react";
+import type { Problem } from "../types";
 
 export function useProblems() {
   const [problems, setProblems] = useState<Problem[]>([]);
@@ -12,14 +12,14 @@ export function useProblems() {
 
   const fetchProblems = async () => {
     try {
-      const response = await fetch('/api/problems');
+      const response = await fetch("/api/problems");
       const data = await response.json();
       setProblems(data);
       if (data.length > 0 && !currentProblem) {
         fetchProblemDetails(data[0].id);
       }
     } catch (error) {
-      console.error('Failed to fetch problems:', error);
+      console.error("Failed to fetch problems:", error);
     } finally {
       setLoading(false);
     }
@@ -31,7 +31,7 @@ export function useProblems() {
       const data = await response.json();
       setCurrentProblem(data);
     } catch (error) {
-      console.error('Failed to fetch problem details:', error);
+      console.error("Failed to fetch problem details:", error);
     }
   };
 
@@ -47,8 +47,6 @@ export function useProblems() {
     problems,
     currentProblem,
     setCurrentProblem: handleSetCurrentProblem,
-    loading
+    loading,
   };
 }
-
-
