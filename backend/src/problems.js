@@ -67,66 +67,73 @@ Explanation:
   },
   {
     id: 2,
-    title: "String Digit Removal for Lexicographic Order",
-    description: `Given two strings s and t, both consisting of lowercase English letters and digits, calculate how many ways exactly one digit could be removed from one of the strings so that s is lexicographically smaller than t after the removal.
-
-Important Notes:
-- Remove only a single instance of a single digit (not all instances)
-- For example, removing 1 from "a11b1c" could result in "a1b1c" or "a11bc", but not "abc"
-- Digits are considered lexicographically smaller than letters
+    title: "Sensor Readings",
+    description: `Process an array of non-negative integers called readings. Each element must be repeatedly replaced by the sum of its digits until every element becomes a single digit. After this transformation, return the most frequently occurring digit in the final array. If there is a tie (multiple digits occurring with the same maximum frequency), return the highest digit among them.
 
 Input Format:
-First line: string s
-Second line: string t
+First line: Number of readings N
+Next line: N space-separated integers representing the readings
 
 Output Format:
-Return an integer representing the number of valid ways to remove exactly one digit.
+Return a single integer representing the most frequently occurring digit (or highest digit in case of tie).
 
 Example 1:
 Input:
-ab12c
-1zz456
+4
+123 456 789 101
 
 Output:
-1
+6
 
 Explanation:
-- Remove first digit from s: "ab2c" > "1zz456" (not counted)
-- Remove second digit from s: "ab1c" > "1zz456" (not counted)
-- Remove first digit from t: "ab12c" < "zz456" (counted)
-- Remove second digit from t: "ab12c" > "1zz56" (not counted)
-- Remove third digit from t: "ab12c" > "1zz46" (not counted)
-- Remove fourth digit from t: "ab12c" > "1zz45" (not counted)
-Only 1 valid case.
+- 123 → 1+2+3 = 6
+- 456 → 4+5+6 = 15 → 1+5 = 6
+- 789 → 7+8+9 = 24 → 2+4 = 6
+- 101 → 1+0+1 = 2
+Final array: [6, 6, 6, 2]. Most occurring digit is 6.
 
 Example 2:
 Input:
-ab12c
-ab24z
+1
+6
 
 Output:
-3
+6
 
 Explanation:
-- Remove first digit from s: "ab1c" < "ab24z" (counted)
-- Remove second digit from s: "ab2c" > "ab24z" (not counted)
-- Remove first digit from t: "ab12c" < "ab4z" (counted)
-- Remove second digit from t: "ab12c" < "ab2z" (counted)
-Three valid cases.`,
+- 6 is already a single digit
+- Final array: [6]. Most occurring digit is 6.
+
+Example 3:
+Input:
+5
+3 12 23 32 0
+
+Output:
+5
+
+Explanation:
+- 3 → 3
+- 12 → 1+2 = 3
+- 23 → 2+3 = 5
+- 32 → 3+2 = 5
+- 0 → 0
+Final array: [3, 3, 5, 5, 0]. Digits 3 and 5 each appear twice. Since there's a tie, return the highest digit: 5.`,
     examples: [
-      { input: "ab12c\n1zz456", output: "1" },
-      { input: "ab12c\nab24z", output: "3" },
+      { input: "4\n123 456 789 101", output: "6" },
+      { input: "1\n6", output: "6" },
+      { input: "5\n3 12 23 32 0", output: "5" },
     ],
     testcases: [
-      { id: 1, input: "ab12c\n1zz456", expected: "1" },
-      { id: 2, input: "ab12c\nab24z", expected: "3" },
-      { id: 3, input: "abc\n123", expected: "0" },
-      { id: 4, input: "a1b2c3\nd4e5f6", expected: "6" },
+      { id: 1, input: "4\n123 456 789 101", expected: "6" },
+      { id: 2, input: "1\n6", expected: "6" },
+      { id: 3, input: "5\n3 12 23 32 0", expected: "5" },
+      { id: 4, input: "3\n999 888 777", expected: "9" },
     ],
     functionSignature: "def solve():",
     starterCode: {
-      python: `def solve():\n    # Read strings s and t from input\n    # Try removing each digit from s and check if result < t\n    # Try removing each digit from t and check if s < result\n    # Count valid removals\n    pass`,
-      javascript: `function solve() {\n    // Input is available via global.__input__\n    // Parse strings s and t\n    // Try all possible single digit removals\n    // Count cases where s < t after removal\n}`,
+      python: `def solve():\n    # Read number of readings\n    # Read the readings array\n    # For each reading, reduce to single digit by summing digits repeatedly\n    # Count frequency of each digit in final array\n    # Return most frequent digit (or highest in case of tie)\n    pass`,
+      javascript: `function solve() {\n    // Input is available via global.__input__\n    // Parse readings array\n    // Reduce each reading to single digit\n    // Count frequencies and return most frequent (or highest if tie)\n}`,
     },
   },
   {
