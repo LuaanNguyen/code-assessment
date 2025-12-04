@@ -233,6 +233,91 @@ Note: Output each line on a separate line. The border width is width + 4 (2 aste
       javascript: `function solve() {\n    // Input is available via global.__input__\n    // Parse input: width, paragraphs\n    // Format text with centering and wrapping\n    // Add border and return array of lines\n}`,
     },
   },
+  {
+    id: 5,
+    title: "Phone Number to Words Converter",
+    description: `Given a string of digits representing a phone number, find all possible valid words that can be formed using the traditional phone number letter mapping.
+
+Phone Keypad Mapping:
+2: 'abc'
+3: 'def'
+4: 'ghi'
+5: 'jkl'
+6: 'mno'
+7: 'pqrs'
+8: 'tuv'
+9: 'wxyz'
+
+Input Format:
+First line: A string of digits (2-9) representing the phone number
+Second line: A dictionary of valid words, space-separated
+
+Output Format:
+Return all valid words that can be spelled using the digits, one word per line, in lexicographical order.
+
+Rules:
+- Generate all possible letter combinations from the digits
+- Only return words that exist in the provided dictionary
+- Words should be returned in lexicographical (alphabetical) order
+- The phone number can be of any length
+
+Example:
+Input:
+76278
+roast smart snast tree test
+
+Output:
+roast
+smart
+snast
+
+Explanation:
+- Digit 7 maps to: p, q, r, s
+- Digit 6 maps to: m, n, o
+- Digit 2 maps to: a, b, c
+- Digit 7 maps to: p, q, r, s
+- Digit 8 maps to: t, u, v
+
+Possible combinations include: roast, smart, snast, etc.
+Only words present in the dictionary are returned.`,
+    examples: [
+      { 
+        input: "76278\nroast smart snast tree test", 
+        output: "roast\nsmart\nsnast" 
+      },
+      { 
+        input: "23\nad ae af bd be bf cd ce cf", 
+        output: "ad\nae\naf\nbd\nbe\nbf\ncd\nce\ncf" 
+      },
+    ],
+    testcases: [
+      { 
+        id: 1, 
+        input: "76278\nroast smart snast tree test", 
+        expected: "roast\nsmart\nsnast" 
+      },
+      { 
+        id: 2, 
+        input: "23\nad ae af bd be bf cd ce cf", 
+        expected: "ad\nae\naf\nbd\nbe\nbf\ncd\nce\ncf" 
+      },
+      { 
+        id: 3, 
+        input: "2\na b c", 
+        expected: "a\nb\nc" 
+      },
+      { 
+        id: 4, 
+        input: "999\nwww wwx wwy wwz", 
+        expected: "www\nwwx\nwwy\nwwz" 
+      },
+    ],
+    functionSignature: "def solve():",
+    starterCode: {
+      python: `def solve():\n    # Read phone number digits\n    # Read dictionary words\n    # Map digits to letters\n    # Generate all possible letter combinations\n    # Filter by dictionary and return in sorted order\n    pass`,
+      javascript: `function solve() {\n    // Input is available via global.__input__\n    // Parse phone number and dictionary\n    // Map digits to letters\n    // Generate combinations and filter by dictionary\n    // Return sorted valid words\n}`,
+    },
+  },
 ];
 
 /**
