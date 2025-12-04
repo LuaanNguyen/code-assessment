@@ -5,6 +5,7 @@ export interface Problem {
   examples: Array<{ input: string; output: string }>;
   testcases: Array<{ id: number; input: string; expected: string }>;
   functionSignature: string;
+  difficulty?: string;
   starterCode?: {
     python?: string;
     javascript?: string;
@@ -27,4 +28,20 @@ export interface ExecutionResult {
   }>;
 }
 
+export interface AssessmentState {
+  id: string;
+  startTime: number;
+  endTime: number;
+  timeRemaining: number;
+  currentProblemIndex: number;
+  problemScores: number[];
+  problemSubmissions: Record<number, ExecutionResult | null>;
+  completed: boolean;
+}
 
+export interface AssessmentResult {
+  totalScore: number;
+  problemScores: Array<{ problemId: number; score: number; passed: boolean }>;
+  timeSpent: number;
+  completed: boolean;
+}

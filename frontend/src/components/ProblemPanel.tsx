@@ -15,9 +15,18 @@ export function ProblemPanel({ problem }: ProblemPanelProps) {
 
   return (
     <div className="p-4 h-full overflow-y-auto">
-      <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
-        {problem.title}
-      </h2>
+      <div className="mb-4">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+          {problem.title}
+        </h2>
+        {problem.difficulty && (
+          <div className="mt-2">
+            <span className="inline-block px-3 py-1 text-sm font-semibold rounded bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+              {problem.difficulty}
+            </span>
+          </div>
+        )}
+      </div>
       
       <div className="mb-6">
         <h3 className="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-200">

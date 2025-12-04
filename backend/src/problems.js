@@ -4,6 +4,7 @@ const problems = [
   {
     id: 1,
     title: "Sum of Two Numbers",
+    difficulty: "Easy",
     description: `Given two integers a and b, return their sum.
 
 Write a function solve() that takes no parameters. The function should read two space-separated integers from standard input and return their sum.
@@ -30,6 +31,7 @@ Output: "3"`,
   {
     id: 2,
     title: "Find Maximum Value",
+    difficulty: "Easy-Medium",
     description: `Given a list of integers, find and return the maximum value.
 
 Write a function solve() that reads space-separated integers from standard input and returns the maximum value.
@@ -56,6 +58,7 @@ Output: "9"`,
   {
     id: 3,
     title: "Count Even Numbers",
+    difficulty: "Medium",
     description: `Given a list of integers, count how many even numbers are in the list.
 
 Write a function solve() that reads space-separated integers from standard input and returns the count of even numbers.
@@ -79,6 +82,33 @@ Output: "3"`,
       javascript: `function solve() {\n    // Input is available via global.__input__\n    const input = global.__input__ || '';\n    const values = input.split(' ').map(Number);\n    // Count and return the number of even integers\n    return values.filter(n => n % 2 === 0).length;\n}`,
     },
   },
+  {
+    id: 4,
+    title: "Reverse String",
+    difficulty: "Medium-Hard",
+    description: `Given a string, reverse it and return the reversed string.
+
+Write a function solve() that reads a string from standard input and returns the reversed string.
+
+Example:
+Input: "hello"
+Output: "olleh"`,
+    examples: [
+      { input: "hello", output: "olleh" },
+      { input: "world", output: "dlrow" },
+    ],
+    testcases: [
+      { id: 1, input: "hello", expected: "olleh" },
+      { id: 2, input: "world", expected: "dlrow" },
+      { id: 3, input: "abc", expected: "cba" },
+      { id: 4, input: "12345", expected: "54321" },
+    ],
+    functionSignature: "def solve():",
+    starterCode: {
+      python: `def solve():\n    # Read a string from input\n    # Return the reversed string\n    pass`,
+      javascript: `function solve() {\n    // Input is available via global.__input__\n    const input = global.__input__ || '';\n    // Return the reversed string\n    return input.split('').reverse().join('');\n}`,
+    },
+  },
 ];
 
 /**
@@ -91,6 +121,7 @@ export function getProblems() {
     description: p.description,
     examples: p.examples,
     functionSignature: p.functionSignature,
+    difficulty: p.difficulty,
   }));
 }
 

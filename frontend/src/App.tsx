@@ -3,13 +3,30 @@ import { CodeEditor } from './components/CodeEditor';
 import { ProblemPanel } from './components/ProblemPanel';
 import { TestcasePanel } from './components/TestcasePanel';
 import { Header } from './components/Header';
+import { AssessmentHeader } from './components/AssessmentHeader';
+import { AssessmentStart } from './components/AssessmentStart';
+import { AssessmentResults } from './components/AssessmentResults';
 import { useTheme, type Theme } from './hooks/useTheme';
 import { useProblems } from './hooks/useProblems';
+import { useAssessment } from './hooks/useAssessment';
 import type { Problem, ExecutionResult } from './types';
+
+type Mode = 'practice' | 'assessment';
 
 function App() {
   const { theme, setTheme } = useTheme();
   const { problems, currentProblem, setCurrentProblem } = useProblems();
+  const {
+    assessment,
+    isActive: isAssessmentActive,
+    startAssessment,
+    submitProblem,
+    setCurrentProblemIndex,
+    completeAssessment,
+    resetAssessment,
+  } = useAssessment();
+
+  const [mode, setMode] = useState<Mode>('practice');
   const [code, setCode] = useState<string>('');
   const [language, setLanguage] = useState<'python' | 'javascript'>('python');
   const [customInput, setCustomInput] = useState<string>('');
@@ -19,25 +36,50 @@ function App() {
   const [executionResult, setExecutionResult] = useState<ExecutionResult | null>(null);
   const [submissionResults, setSubmissionResults] = useState<any>(null);
 
+  // Assessment problems (first 4 problems)
+  const assessmentProblems = problems.slice(0, 4);
+  const currentAssessmentProblem =
+    assessment && assessmentProblems[assessment.currentProblemIndex];
+
   // Load saved code from localStorage
   useEffect(() => {
-    const savedCode = localStorage.getItem(`code-${currentProblem?.id}-${language}`);
+    const problem = mode === 'assessment' ? currentAssessmentProblem : currentProblem;
+    if (!problem) return;
+
+    const key = mode === 'assessment' 
+      ? `assessment-code-${problem.id}-${language}`
+      : `code-${problem.id}-${language}`;
+    
+    const savedCode = localStorage.getItem(key);
     if (savedCode) {
       setCode(savedCode);
-    } else if (currentProblem?.starterCode) {
-      setCode(currentProblem.starterCode[language] || '');
+    } else if (problem.starterCode) {
+      setCode(problem.starterCode[language] || '');
     }
-  }, [currentProblem, language]);
+  }, [currentProblem, currentAssessmentProblem, language, mode]);
 
   // Save code to localStorage
   useEffect(() => {
-    if (code && currentProblem) {
-      localStorage.setItem(`code-${currentProblem.id}-${language}`, code);
+    const problem = mode === 'assessment' ? currentAssessmentProblem : currentProblem;
+    if (!code || !problem) return;
+
+    const key = mode === 'assessment'
+      ? `assessment-code-${problem.id}-${language}`
+      : `code-${problem.id}-${language}`;
+    
+    localStorage.setItem(key, code);
+  }, [code, currentProblem, currentAssessmentProblem, language, mode]);
+
+  // Check if assessment time expired
+  useEffect(() => {
+    if (assessment && assessment.timeRemaining <= 0 && !assessment.completed) {
+      completeAssessment();
     }
-  }, [code, currentProblem, language]);
+  }, [assessment, completeAssessment]);
 
   const handleRun = async () => {
-    if (!currentProblem) return;
+    const problem = mode === 'assessment' ? currentAssessmentProblem : currentProblem;
+    if (!problem) return;
 
     setIsRunning(true);
     setActiveTab('output');
@@ -50,14 +92,13 @@ function App() {
         body: JSON.stringify({
           code,
           language,
-          customInput: customInput || undefined
-        })
+          customInput: customInput || undefined,
+        }),
       });
 
       const result = await response.json();
       setExecutionResult(result);
-      
-      // Combine stdout and stderr for display, prioritizing stderr for errors
+
       let displayOutput = '';
       if (result.stderr && result.stderr.trim()) {
         displayOutput = result.stderr;
@@ -70,7 +111,7 @@ function App() {
       } else {
         displayOutput = 'No output produced. Check your code for errors.';
       }
-      
+
       setOutput(displayOutput);
     } catch (error) {
       setOutput(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -80,7 +121,8 @@ function App() {
   };
 
   const handleSubmit = async () => {
-    if (!currentProblem) return;
+    const problem = mode === 'assessment' ? currentAssessmentProblem : currentProblem;
+    if (!problem) return;
 
     setIsRunning(true);
     setActiveTab('results');
@@ -93,20 +135,24 @@ function App() {
         body: JSON.stringify({
           code,
           language,
-          testcases: currentProblem.testcases
-        })
+          testcases: problem.testcases,
+        }),
       });
 
       const result = await response.json();
       setExecutionResult(result);
       setSubmissionResults(result);
 
-      // Calculate score
       const passed = result.testResults?.filter((t: any) => t.passed).length || 0;
       const total = result.testResults?.length || 0;
       const score = total > 0 ? Math.round((passed / total) * 100) : 0;
 
       setOutput(`Submission complete!\nPassed: ${passed}/${total}\nScore: ${score}%`);
+
+      // In assessment mode, save the submission
+      if (mode === 'assessment' && assessment) {
+        submitProblem(problem.id, result);
+      }
     } catch (error) {
       setOutput(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
@@ -115,8 +161,9 @@ function App() {
   };
 
   const handleReset = () => {
-    if (currentProblem?.starterCode) {
-      setCode(currentProblem.starterCode[language] || '');
+    const problem = mode === 'assessment' ? currentAssessmentProblem : currentProblem;
+    if (problem?.starterCode) {
+      setCode(problem.starterCode[language] || '');
     } else {
       setCode('');
     }
@@ -124,11 +171,55 @@ function App() {
 
   const handleLanguageChange = (newLanguage: 'python' | 'javascript') => {
     setLanguage(newLanguage);
-    const savedCode = localStorage.getItem(`code-${currentProblem?.id}-${newLanguage}`);
+    const problem = mode === 'assessment' ? currentAssessmentProblem : currentProblem;
+    if (!problem) return;
+
+    const key = mode === 'assessment'
+      ? `assessment-code-${problem.id}-${newLanguage}`
+      : `code-${problem.id}-${newLanguage}`;
+    
+    const savedCode = localStorage.getItem(key);
     if (savedCode) {
       setCode(savedCode);
-    } else if (currentProblem?.starterCode) {
-      setCode(currentProblem.starterCode[newLanguage] || '');
+    } else if (problem.starterCode) {
+      setCode(problem.starterCode[newLanguage] || '');
+    }
+  };
+
+  const handleStartAssessment = () => {
+    startAssessment();
+    setMode('assessment');
+    if (assessmentProblems.length > 0) {
+      setCurrentProblem(assessmentProblems[0]);
+    }
+  };
+
+  const handleAssessmentProblemChange = (index: number) => {
+    if (assessment) {
+      setCurrentProblemIndex(index);
+      setCurrentProblem(assessmentProblems[index]);
+    }
+  };
+
+  const handleCompleteAssessment = () => {
+    if (assessment) {
+      completeAssessment();
+    }
+  };
+
+  const handleModeSwitch = (newMode: Mode) => {
+    if (newMode === 'practice') {
+      setMode('practice');
+      if (problems.length > 0 && !currentProblem) {
+        setCurrentProblem(problems[0]);
+      }
+    } else {
+      if (!assessment) {
+        // Show start screen
+        setMode('assessment');
+      } else {
+        setMode('assessment');
+      }
     }
   };
 
@@ -139,28 +230,123 @@ function App() {
     return theme === 'dark' ? 'dark' : '';
   };
 
+  // Show assessment start screen
+  if (mode === 'assessment' && !assessment) {
+    return (
+      <div
+        className={`min-h-screen ${getBackgroundClass()}`}
+        style={
+          theme.startsWith('catppuccin-')
+            ? {
+                backgroundColor: 'var(--ctp-base)',
+                color: 'var(--ctp-text)',
+              }
+            : {}
+        }
+      >
+        <AssessmentStart onStart={handleStartAssessment} theme={theme} />
+      </div>
+    );
+  }
+
+  // Show assessment results
+  if (mode === 'assessment' && assessment?.completed) {
+    return (
+      <div
+        className={`min-h-screen ${getBackgroundClass()}`}
+        style={
+          theme.startsWith('catppuccin-')
+            ? {
+                backgroundColor: 'var(--ctp-base)',
+                color: 'var(--ctp-text)',
+              }
+            : {}
+        }
+      >
+        <AssessmentResults
+          assessment={assessment}
+          problems={assessmentProblems}
+          theme={theme}
+          onReset={() => {
+            resetAssessment();
+            setMode('practice');
+          }}
+        />
+      </div>
+    );
+  }
+
+  // Show main interface (practice or assessment)
+  const displayProblem = mode === 'assessment' ? currentAssessmentProblem : currentProblem;
+
   return (
-    <div 
+    <div
       className={`min-h-screen ${getBackgroundClass()}`}
-      style={theme.startsWith('catppuccin-') ? { 
-        backgroundColor: 'var(--ctp-base)',
-        color: 'var(--ctp-text)'
-      } : {}}
+      style={
+        theme.startsWith('catppuccin-')
+          ? {
+              backgroundColor: 'var(--ctp-base)',
+              color: 'var(--ctp-text)',
+            }
+          : {}
+      }
     >
-      <Header 
-        problems={problems}
-        currentProblem={currentProblem}
-        onProblemChange={setCurrentProblem}
-        theme={theme}
-        onThemeChange={setTheme}
-        language={language}
-        onLanguageChange={handleLanguageChange}
-      />
-      
-      <div className="flex h-[calc(100vh-64px)]">
+      {mode === 'assessment' && assessment ? (
+        <AssessmentHeader
+          assessment={assessment}
+          problems={assessmentProblems}
+          currentProblemIndex={assessment.currentProblemIndex}
+          onProblemChange={handleAssessmentProblemChange}
+          theme={theme}
+        />
+      ) : (
+        <Header
+          problems={problems}
+          currentProblem={currentProblem}
+          onProblemChange={setCurrentProblem}
+          theme={theme}
+          onThemeChange={setTheme}
+          language={language}
+          onLanguageChange={handleLanguageChange}
+        />
+      )}
+
+      {/* Mode switcher */}
+      <div className="flex justify-center gap-2 p-2 border-b border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+        <button
+          onClick={() => handleModeSwitch('practice')}
+          className={`px-4 py-1 rounded text-sm ${
+            mode === 'practice'
+              ? 'bg-blue-600 text-white'
+              : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+          }`}
+        >
+          Practice Mode
+        </button>
+        <button
+          onClick={() => handleModeSwitch('assessment')}
+          className={`px-4 py-1 rounded text-sm ${
+            mode === 'assessment'
+              ? 'bg-blue-600 text-white'
+              : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+          }`}
+        >
+          Assessment Mode
+        </button>
+        {mode === 'assessment' && assessment && (
+          <button
+            onClick={handleCompleteAssessment}
+            className="px-4 py-1 rounded text-sm bg-red-600 text-white hover:bg-red-700"
+          >
+            Complete Assessment
+          </button>
+        )}
+      </div>
+
+      <div className="flex h-[calc(100vh-112px)]">
         {/* Left Panel - Problem Description */}
         <div className="w-1/4 border-r border-gray-300 dark:border-gray-700 overflow-y-auto">
-          <ProblemPanel problem={currentProblem} />
+          <ProblemPanel problem={displayProblem} />
         </div>
 
         {/* Center Panel - Code Editor */}
@@ -180,7 +366,7 @@ function App() {
         {/* Right Panel - Testcases & Output */}
         <div className="w-1/4 overflow-y-auto">
           <TestcasePanel
-            problem={currentProblem}
+            problem={displayProblem}
             customInput={customInput}
             onCustomInputChange={setCustomInput}
             activeTab={activeTab}
@@ -197,4 +383,3 @@ function App() {
 }
 
 export default App;
-
