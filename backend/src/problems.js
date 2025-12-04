@@ -67,28 +67,66 @@ Explanation:
   },
   {
     id: 2,
-    title: "Find Maximum Value",
-    description: `Given a list of integers, find and return the maximum value.
+    title: "String Digit Removal for Lexicographic Order",
+    description: `Given two strings s and t, both consisting of lowercase English letters and digits, calculate how many ways exactly one digit could be removed from one of the strings so that s is lexicographically smaller than t after the removal.
 
-Write a function solve() that reads space-separated integers from standard input and returns the maximum value.
+Important Notes:
+- Remove only a single instance of a single digit (not all instances)
+- For example, removing 1 from "a11b1c" could result in "a1b1c" or "a11bc", but not "abc"
+- Digits are considered lexicographically smaller than letters
 
-Example:
-Input: "3 7 2 9 1"
-Output: "9"`,
+Input Format:
+First line: string s
+Second line: string t
+
+Output Format:
+Return an integer representing the number of valid ways to remove exactly one digit.
+
+Example 1:
+Input:
+ab12c
+1zz456
+
+Output:
+1
+
+Explanation:
+- Remove first digit from s: "ab2c" > "1zz456" (not counted)
+- Remove second digit from s: "ab1c" > "1zz456" (not counted)
+- Remove first digit from t: "ab12c" < "zz456" (counted)
+- Remove second digit from t: "ab12c" > "1zz56" (not counted)
+- Remove third digit from t: "ab12c" > "1zz46" (not counted)
+- Remove fourth digit from t: "ab12c" > "1zz45" (not counted)
+Only 1 valid case.
+
+Example 2:
+Input:
+ab12c
+ab24z
+
+Output:
+3
+
+Explanation:
+- Remove first digit from s: "ab1c" < "ab24z" (counted)
+- Remove second digit from s: "ab2c" > "ab24z" (not counted)
+- Remove first digit from t: "ab12c" < "ab4z" (counted)
+- Remove second digit from t: "ab12c" < "ab2z" (counted)
+Three valid cases.`,
     examples: [
-      { input: "3 7 2 9 1", output: "9" },
-      { input: "10 5 8", output: "10" },
+      { input: "ab12c\n1zz456", output: "1" },
+      { input: "ab12c\nab24z", output: "3" },
     ],
     testcases: [
-      { id: 1, input: "3 7 2 9 1", expected: "9" },
-      { id: 2, input: "10 5 8", expected: "10" },
-      { id: 3, input: "-1 -5 -3", expected: "-1" },
-      { id: 4, input: "42", expected: "42" },
+      { id: 1, input: "ab12c\n1zz456", expected: "1" },
+      { id: 2, input: "ab12c\nab24z", expected: "3" },
+      { id: 3, input: "abc\n123", expected: "0" },
+      { id: 4, input: "a1b2c3\nd4e5f6", expected: "6" },
     ],
     functionSignature: "def solve():",
     starterCode: {
-      python: `def solve():\n    # Read space-separated integers from input\n    # Return the maximum value\n    pass`,
-      javascript: `function solve() {\n    // Input is available via global.__input__\n    const input = global.__input__ || '';\n    const values = input.split(' ').map(Number);\n    // Return the maximum value\n    return Math.max(...values);\n}`,
+      python: `def solve():\n    # Read strings s and t from input\n    # Try removing each digit from s and check if result < t\n    # Try removing each digit from t and check if s < result\n    # Count valid removals\n    pass`,
+      javascript: `function solve() {\n    // Input is available via global.__input__\n    // Parse strings s and t\n    // Try all possible single digit removals\n    // Count cases where s < t after removal\n}`,
     },
   },
   {
