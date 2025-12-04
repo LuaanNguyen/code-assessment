@@ -67,73 +67,81 @@ Explanation:
   },
   {
     id: 2,
-    title: "Sensor Readings",
-    description: `Process an array of non-negative integers called readings. Each element must be repeatedly replaced by the sum of its digits until every element becomes a single digit. After this transformation, return the most frequently occurring digit in the final array. If there is a tie (multiple digits occurring with the same maximum frequency), return the highest digit among them.
+    title: "Array Triplets with Pythagorean Property",
+    description: `Given an integer array of length n, return a result array of length n-2, where result[i] = 1 if the triplet (array[i], array[i+1], array[i+2]) satisfies any of the three Pythagorean conditions:
+
+1. array[i]^2 + array[i+1]^2 = array[i+2]^2
+2. array[i+1]^2 + array[i+2]^2 = array[i]^2
+3. array[i]^2 + array[i+2]^2 = array[i+1]^2
+
+Otherwise, result[i] = 0.
 
 Input Format:
-First line: Number of readings N
-Next line: N space-separated integers representing the readings
+First line: Number of elements N
+Next line: N space-separated integers
 
 Output Format:
-Return a single integer representing the most frequently occurring digit (or highest digit in case of tie).
+Return n-2 space-separated integers (or one per line) representing the result array.
 
 Example 1:
 Input:
-4
-123 456 789 101
+5
+3 4 5 12 13
 
 Output:
-6
+1 0
 
 Explanation:
-- 123 → 1+2+3 = 6
-- 456 → 4+5+6 = 15 → 1+5 = 6
-- 789 → 7+8+9 = 24 → 2+4 = 6
-- 101 → 1+0+1 = 2
-Final array: [6, 6, 6, 2]. Most occurring digit is 6.
+- For triplet (3, 4, 5): 3^2 + 4^2 = 9 + 16 = 25 = 5^2 ✓ → result[0] = 1
+- For triplet (4, 5, 12): Check all three conditions:
+  * 4^2 + 5^2 = 16 + 25 = 41 ≠ 12^2 = 144
+  * 5^2 + 12^2 = 25 + 144 = 169 ≠ 4^2 = 16
+  * 4^2 + 12^2 = 16 + 144 = 160 ≠ 5^2 = 25
+  None satisfied → result[1] = 0
 
 Example 2:
 Input:
-1
-6
+4
+5 12 13 3
 
 Output:
-6
+1 0
 
 Explanation:
-- 6 is already a single digit
-- Final array: [6]. Most occurring digit is 6.
+- For triplet (5, 12, 13): 5^2 + 12^2 = 25 + 144 = 169 = 13^2 ✓ → result[0] = 1
+- For triplet (12, 13, 3): Check all three conditions:
+  * 12^2 + 13^2 = 144 + 169 = 313 ≠ 3^2 = 9
+  * 13^2 + 3^2 = 169 + 9 = 178 ≠ 12^2 = 144
+  * 12^2 + 3^2 = 144 + 9 = 153 ≠ 13^2 = 169
+  None satisfied → result[1] = 0
 
 Example 3:
 Input:
-5
-3 12 23 32 0
+4
+4 3 5 6
 
 Output:
-5
+1 0
 
 Explanation:
-- 3 → 3
-- 12 → 1+2 = 3
-- 23 → 2+3 = 5
-- 32 → 3+2 = 5
-- 0 → 0
-Final array: [3, 3, 5, 5, 0]. Digits 3 and 5 each appear twice. Since there's a tie, return the highest digit: 5.`,
+- For triplet (4, 3, 5): Check condition 3: 4^2 + 5^2 = 16 + 25 = 41 ≠ 3^2 = 9
+  Actually: 3^2 + 4^2 = 9 + 16 = 25 = 5^2 ✓ → result[0] = 1
+- For triplet (3, 5, 6): None of the conditions are satisfied → result[1] = 0`,
     examples: [
-      { input: "4\n123 456 789 101", output: "6" },
-      { input: "1\n6", output: "6" },
-      { input: "5\n3 12 23 32 0", output: "5" },
+      { input: "5\n3 4 5 12 13", output: "1 0" },
+      { input: "4\n5 12 13 3", output: "1 0" },
+      { input: "4\n4 3 5 6", output: "1 0" },
     ],
     testcases: [
-      { id: 1, input: "4\n123 456 789 101", expected: "6" },
-      { id: 2, input: "1\n6", expected: "6" },
-      { id: 3, input: "5\n3 12 23 32 0", expected: "5" },
-      { id: 4, input: "3\n999 888 777", expected: "9" },
+      { id: 1, input: "5\n3 4 5 12 13", expected: "1 0" },
+      { id: 2, input: "4\n5 12 13 3", expected: "1 0" },
+      { id: 3, input: "4\n4 3 5 6", expected: "1 0" },
+      { id: 4, input: "6\n6 8 10 5 12 13", expected: "1 0 1" },
     ],
     functionSignature: "def solve():",
     starterCode: {
-      python: `def solve():\n    # Read number of readings\n    # Read the readings array\n    # For each reading, reduce to single digit by summing digits repeatedly\n    # Count frequency of each digit in final array\n    # Return most frequent digit (or highest in case of tie)\n    pass`,
-      javascript: `function solve() {\n    // Input is available via global.__input__\n    // Parse readings array\n    // Reduce each reading to single digit\n    // Count frequencies and return most frequent (or highest if tie)\n}`,
+      python: `def solve():\n    # Read number of elements N\n    # Read the array of integers\n    # For each position i from 0 to n-3:\n    #   Check if triplet (array[i], array[i+1], array[i+2]) satisfies any Pythagorean condition\n    #   Set result[i] = 1 if yes, 0 otherwise\n    # Return the result array\n    pass`,
+      javascript: `function solve() {\n    // Input is available via global.__input__\n    // Parse array of integers\n    // For each triplet, check all three Pythagorean conditions\n    // Return result array of length n-2\n}`,
     },
   },
   {
