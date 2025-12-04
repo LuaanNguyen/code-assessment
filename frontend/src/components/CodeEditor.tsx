@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import Editor from '@monaco-editor/react';
+import type { Theme } from '../hooks/useTheme';
 
 interface CodeEditorProps {
   code: string;
@@ -9,6 +10,7 @@ interface CodeEditorProps {
   onSubmit: () => void;
   onReset: () => void;
   isRunning: boolean;
+  theme: Theme;
 }
 
 export function CodeEditor({
@@ -18,8 +20,15 @@ export function CodeEditor({
   onRun,
   onSubmit,
   onReset,
-  isRunning
+  isRunning,
+  theme
 }: CodeEditorProps) {
+  const getMonacoTheme = () => {
+    if (theme === 'light' || theme === 'catppuccin-latte') {
+      return 'vs';
+    }
+    return 'vs-dark';
+  };
   const editorRef = useRef<any>(null);
 
   useEffect(() => {
@@ -80,7 +89,7 @@ export function CodeEditor({
           value={code}
           onChange={(value) => onChange(value || '')}
           onMount={handleEditorDidMount}
-          theme="vs-dark"
+          theme={getMonacoTheme()}
           options={{
             minimap: { enabled: false },
             fontSize: 14,

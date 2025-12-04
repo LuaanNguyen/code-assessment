@@ -3,12 +3,12 @@ import { CodeEditor } from './components/CodeEditor';
 import { ProblemPanel } from './components/ProblemPanel';
 import { TestcasePanel } from './components/TestcasePanel';
 import { Header } from './components/Header';
-import { useTheme } from './hooks/useTheme';
+import { useTheme, type Theme } from './hooks/useTheme';
 import { useProblems } from './hooks/useProblems';
 import type { Problem, ExecutionResult } from './types';
 
 function App() {
-  const { theme, toggleTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
   const { problems, currentProblem, setCurrentProblem } = useProblems();
   const [code, setCode] = useState<string>('');
   const [language, setLanguage] = useState<'python' | 'javascript'>('python');
@@ -132,14 +132,27 @@ function App() {
     }
   };
 
+  const getBackgroundClass = () => {
+    if (theme.startsWith('catppuccin-')) {
+      return `${theme} dark`;
+    }
+    return theme === 'dark' ? 'dark' : '';
+  };
+
   return (
-    <div className={`min-h-screen ${theme === 'dark' ? 'dark bg-gray-900' : 'bg-gray-50'}`}>
+    <div 
+      className={`min-h-screen ${getBackgroundClass()}`}
+      style={theme.startsWith('catppuccin-') ? { 
+        backgroundColor: 'var(--ctp-base)',
+        color: 'var(--ctp-text)'
+      } : {}}
+    >
       <Header 
         problems={problems}
         currentProblem={currentProblem}
         onProblemChange={setCurrentProblem}
         theme={theme}
-        onThemeToggle={toggleTheme}
+        onThemeChange={setTheme}
         language={language}
         onLanguageChange={handleLanguageChange}
       />
@@ -160,6 +173,7 @@ function App() {
             onSubmit={handleSubmit}
             onReset={handleReset}
             isRunning={isRunning}
+            theme={theme}
           />
         </div>
 
