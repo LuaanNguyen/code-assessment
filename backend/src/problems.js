@@ -67,49 +67,51 @@ Explanation:
   },
   {
     id: 2,
-    title: "Character Cascade from String Array",
-    description: `You are given an array of strings arr. Your task is to construct a string from the words in arr, starting with the 0th character from each word (in the order they appear in arr), followed by the 1st character, then the 2nd character, etc. If one of the words doesn't have an ith character, skip that word. Return the resulting string.
+    title: "Count Valid Words from String",
+    description: `Given a string and a list of valid letters, count how many words in the string can be formed using the letters in the valid letters list.
+
+Rules:
+- Words are split using spaces
+- Punctuation and numbers are always considered valid (they don't need to be in the valid letters list)
+- Both uppercase and lowercase versions of a letter are valid if the lowercase letter is in the valid letters list
+- A word is valid if all its alphabetic characters (ignoring case) are present in the valid letters list
 
 Input Format:
-First line: Number of strings N
-Next line: N space-separated strings
+First line: The input string
+Second line: The valid letters (as a string of lowercase letters)
 
 Output Format:
-Return the resulting cascaded string.
+Return an integer representing the count of valid words.
 
 Example:
 Input:
-4
-Daisy Rose Hyacinth Poppy
+Hello, I am h2ere!
+heloiar
 
 Output:
-DRHPaoyoisapsecpyiynth
+3
 
 Explanation:
-- Round 0 (0th characters): D, R, H, P → "DRHP"
-- Round 1 (1st characters): a, o, y, o → "aoyo"
-- Round 2 (2nd characters): i, s, a, p → "isap"
-- Round 3 (3rd characters): s, e, c, p → "secp"
-- Round 4 (4th characters): y, (skip Rose), i, y → "yiy"
-- Round 5 (5th characters): (skip Daisy), (skip Rose), n, (skip Poppy) → "n"
-- Round 6 (6th characters): (skip Daisy), (skip Rose), t, (skip Poppy) → "t"
-- Round 7 (7th characters): (skip Daisy), (skip Rose), h, (skip Poppy) → "h"
-Final: "DRHP" + "aoyo" + "isap" + "secp" + "yiy" + "n" + "t" + "h" = "DRHPaoyoisapsecpyiynth"`,
+- "Hello," - H, e, l, l, o are all in "heloiar", comma is always valid → Valid
+- "I" - I (lowercase 'i') is in "heloiar" → Valid
+- "am" - 'a' is in list, but 'm' is NOT in "heloiar" → Invalid
+- "h2ere!" - h, e, r, e are all in "heloiar", '2' and '!' are always valid → Valid
+Total: 3 valid words`,
     examples: [
-      { input: "4\nDaisy Rose Hyacinth Poppy", output: "DRHPaoyoisapsecpyiynth" },
-      { input: "3\nabc def ghi", output: "adgbehcfi" },
-      { input: "2\nhello world", output: "hweolrllod" },
+      { input: "Hello, I am h2ere!\nheloiar", output: "3" },
+      { input: "Test 123 test!\nabc", output: "1" },
+      { input: "Hello World\nhelowrld", output: "2" },
     ],
     testcases: [
-      { id: 1, input: "4\nDaisy Rose Hyacinth Poppy", expected: "DRHPaoyoisapsecpyiynth" },
-      { id: 2, input: "3\nabc def ghi", expected: "adgbehcfi" },
-      { id: 3, input: "2\nhello world", expected: "hweolrllod" },
-      { id: 4, input: "3\na bc def", expected: "abdcef" },
+      { id: 1, input: "Hello, I am h2ere!\nheloiar", expected: "3" },
+      { id: 2, input: "Test 123 test!\nabc", expected: "1" },
+      { id: 3, input: "Hello World\nhelowrld", expected: "2" },
+      { id: 4, input: "a1b2c3 d4e5f6\nabcdef", expected: "2" },
     ],
     functionSignature: "def solve():",
     starterCode: {
-      python: `def solve():\n    # Read number of strings N\n    # Read the array of strings\n    # Find the maximum length among all strings\n    # For each position i from 0 to max_length-1:\n    #   For each string in order:\n    #     If string has character at position i, add it to result\n    # Return the resulting string\n    pass`,
-      javascript: `function solve() {\n    // Input is available via global.__input__\n    // Parse array of strings\n    // Iterate through character positions\n    // Collect characters from each string at current position\n    // Return cascaded string\n}`,
+      python: `def solve():\n    # Read the input string\n    # Read the valid letters string\n    # Split the input string by spaces to get words\n    # For each word:\n    #   Check if all alphabetic characters (case-insensitive) are in valid letters\n    #   Punctuation and digits are always valid\n    # Count and return the number of valid words\n    pass`,
+      javascript: `function solve() {\n    // Input is available via global.__input__\n    // Parse input string and valid letters\n    // Split string into words\n    // Check each word: all alphabetic chars must be in valid letters (case-insensitive)\n    // Punctuation and digits are always valid\n    // Return count of valid words\n}`,
     },
   },
   {
